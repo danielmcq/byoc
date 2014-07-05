@@ -1,3 +1,9 @@
+/**
+ * An XML helper class. Useful for conversion of data related to XML.
+ *
+ * @author Daniel McQuiston
+ * @url http://www.dehugo.net/
+ */
 component name="XML" hint="XML Helper Class" {
 	VARIABLES[ "data" ] = {};
 
@@ -23,19 +29,19 @@ component name="XML" hint="XML Helper Class" {
 	public struct function toStruct ( required string xmlNode, struct str )
 			hint="Converts raw XML string into nested ColdFusion structs and arrays."
 	{
-		var attributes=    [];
-		var i=             0;
-		var j=             0;
-		var inXml=         "";
-		var key=           "";
-		var outStruct=     StructNew();
-		var tmpContainer=  "";
+		var attributes  = [];
+		var container   = "";
+		var i           = 0;
+		var j           = 0;
+		var inXml       = "";
+		var key         = "";
+		var output      = {};
 
 		if ( !IsDefined( "ARGUMENTS.str" ) ) {
 			ARGUMENTS.str = StructNew();
 		}
 
-		outStruct = ARGUMENTS.str;
+		output = ARGUMENTS.str;
 
 		inXml = XmlSearch( XmlParse(ARGUMENTS.xmlNode ), "/node()" );
 		inXml = inXml[1];
@@ -45,24 +51,24 @@ component name="XML" hint="XML Helper Class" {
 			key = Replace(inXml.XmlChildren[i].XmlName, inXml.XmlChildren[i].XmlNsPrefix&":", "");
 
 			/* If key with that name exists within output struct ... */
-			if ( StructKeyExists( outStruct, key ) ) {
+			if ( StructKeyExists( output, key ) ) {
 				/* ... and is not an array... */
-				if ( !IsArray( outStruct[key] ) ) {
+				if ( !IsArray( output[key] ) ) {
 					/* ... get this item into temp variable, ... */
-					tmpContainer = outStruct[key];
+					container = output[key];
 					/* ... setup array for this item because we have multiple items with same name, ... */
-					outStruct[key] = ArrayNew(1);
+					output[key] = ArrayNew(1);
 					/* ... and reusing temp item as a first element of new array: */
-					ArrayAppend( outStruct[key], tmpContainer );
+					ArrayAppend( output[key], container );
 				} else {
 					/* Item is already an array: */
 				}
 				if ( ArrayLen(inXml.XmlChildren[i].XmlChildren) ) {
 					/* recurse call: get complex item: */
-					ArrayAppend( outStruct[key], toStruct( inXml.XmlChildren[i] ) );
+					ArrayAppend( output[key], toStruct( inXml.XmlChildren[i] ) );
 				} else {
 					/* else: assign node value as last element of array: */
-					ArrayAppend( outStruct[key], inXml.XmlChildren[i].XmlText );
+					ArrayAppend( output[key], inXml.XmlChildren[i].XmlText );
 				}
 			} else {
 				/* This is not a struct. This may be first tag with some name. */
@@ -70,7 +76,7 @@ component name="XML" hint="XML Helper Class" {
 				/* If context child node has child nodes (which means it will be complex type): */
 				if ( ArrayLen(inXml.XmlChildren[i].XmlChildren) ) {
 					/* recurse call: get complex item: */
-					outStruct[key] = toStruct( inXml.XmlChildren[i] );
+					output[key] = toStruct( inXml.XmlChildren[i] );
 				} else {
 					if ( IsStruct(inXml.XmlAttributes) && StructCount(inXml.XmlAttributes) ) {
 						attributes = StructKeyArray(inXml.XmlAttributes);
@@ -84,14 +90,14 @@ component name="XML" hint="XML Helper Class" {
 
 						/* If there are any attributes left, append them to the response */
 						if ( StructCount(inXml.XmlAttributes) ) {
-							outStruct['_attributes'] = inXml.XmlAttributes;
+							output['_attributes'] = inXml.XmlAttributes;
 						}
 					}
 					/* else: assign node value as last element of array: */
 					/* if there are any attributes on this element */
 					if ( IsStruct(inXml.XmlChildren[i].XmlAttributes) && StructCount(inXml.XmlChildren[i].XmlAttributes) ) {
 						/* assign the text */
-						outStruct[key] = inXml.XmlChildren[i].XmlText;
+						output[key] = inXml.XmlChildren[i].XmlText;
 
 						/* check if there are no attributes with xmlns: , we don't want namespaces to be in the response */
 						attributes = StructKeyArray(inXml.XmlChildren[i].XmlAttributes);
@@ -105,15 +111,15 @@ component name="XML" hint="XML Helper Class" {
 
 						/* If there are any attributes left, append them to the response */
 						if ( StructCount(inXml.XmlChildren[i].XmlAttributes) ) {
-							outStruct[key&'_attributes'] = inXml.XmlChildren[i].XmlAttributes;
+							output[key&'_attributes'] = inXml.XmlChildren[i].XmlAttributes;
 						}
 					} else {
-						outStruct[key] = inXml.XmlChildren[i].XmlText;
+						output[key] = inXml.XmlChildren[i].XmlText;
 					}
 				}
 			}
 		}
 
-		return outStruct;
+		return output;
 	}
 }

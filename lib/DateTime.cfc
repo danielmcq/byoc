@@ -1,3 +1,9 @@
+/**
+ * A DateTime helper class. Useful for date/time related conversions and formatting.
+ *
+ * @author Daniel McQuiston
+ * @url http://www.dehugo.net/
+ */
 component name="DateTime" hint="Date and Time Helper Class" {
 	VARIABLES[ "data" ] = {};
 

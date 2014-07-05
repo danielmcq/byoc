@@ -1,3 +1,9 @@
+/**
+ * A JSON helper class. Useful for converting data to a format that JSON can handle.
+ *
+ * @author Daniel McQuiston
+ * @url http://www.dehugo.net/
+ */
 component name="JSON" hint="JSON Helper Class" {
 	public JSON function init () {
 		return THIS;

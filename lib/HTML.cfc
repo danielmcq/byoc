@@ -1,4 +1,15 @@
+/**
+ * An HTML helper class. Useful for converting various data to HTML.
+ *
+ * @author Daniel McQuiston
+ * @url http://www.dehugo.net/
+ */
 component name="HTML" hint="HTML Helper Class" {
+	public HTML function init () {
+		return THIS;
+	}
+
+
 	public string function arrayToHTMLList ( required array input ) {
 		var i = 0;
 		var output = "";
@@ -7,7 +18,7 @@ component name="HTML" hint="HTML Helper Class" {
 		for ( i = 1; i <= ArrayLen( Arguments.input ); i++ ) {
 			output &= Chr(60) & "li" & Chr(62);
 			if ( IsSimpleValue( Arguments.input[i] ) ) {
-				output &= Arguments.input[i];
+				output &= HTMLEditFormat( Arguments.input[i] );
 			} else if ( IsStruct( Arguments.input[i] ) ) {
 				output &= structToHTMLList( Arguments.input[i] );
 			} else if ( IsArray( Arguments.input[i] ) ) {
@@ -32,7 +43,7 @@ component name="HTML" hint="HTML Helper Class" {
 			output &= Chr(60) & "li" & Chr(62);
 			output &= key & ": ";
 			if ( IsSimpleValue( Arguments.input[key] ) ) {
-				output &= Arguments.input[key];
+				output &= HTMLEditFormat( Arguments.input[key] );
 			} else if ( IsStruct( Arguments.input[key] ) ) {
 				output &= structToHTMLList( Arguments.input[key] );
 			} else if ( IsArray( Arguments.input[key] ) ) {

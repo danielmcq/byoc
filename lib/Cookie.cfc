@@ -34,9 +34,9 @@ component name="Cookie" hint="Cookie Helper Class" {
 		var cookie = {};
 
 		lock
-			scope=    "APPLICATION"
-			type=     "readOnly"
-			timeout=  5
+			scope    = "APPLICATION"
+			type     = "readOnly"
+			timeout  = 5
 		{
 			if ( StructKeyExists( VARIABLES.data, ARGUMENTS.name ) ) {
 				cookie = Duplicate( VARIABLES.data[ ARGUMENTS.name ] );
@@ -51,9 +51,9 @@ component name="Cookie" hint="Cookie Helper Class" {
 		var cookies = {};
 
 		lock
-			scope=    "APPLICATION"
-			type=     "readOnly"
-			timeout=  5
+			scope    = "APPLICATION"
+			type     = "readOnly"
+			timeout  = 5
 		{
 			cookies = Duplicate( VARIABLES.data );
 		}
@@ -67,9 +67,9 @@ component name="Cookie" hint="Cookie Helper Class" {
 		var key = "";
 
 		lock
-			scope=    "APPLICATION"
-			type=     "Exclusive"
-			timeout=  5
+			scope    = "APPLICATION"
+			type     = "Exclusive"
+			timeout  = 5
 		{
 			// Instead of just copying the struct, only update new cookies
 			for ( key in ARGUMENTS.cookies ) {
@@ -82,14 +82,14 @@ component name="Cookie" hint="Cookie Helper Class" {
 
 
 	private struct function _parseCookieHeader ( required struct cookieHeader ) {
-		var aCookie=   [];
-		var cookie=    {};
-		var cookies=   {};
-		var data=      "";
-		var dataKey=   "";
-		var dataVal=   "";
-		var i=         0;
-		var key=       "";
+		var aCookie  = [];
+		var cookie   = {};
+		var cookies  = {};
+		var data     = "";
+		var dataKey  = "";
+		var dataVal  = "";
+		var i        = 0;
+		var key      = "";
 
 		// Loop over the Set-Cookie header
 		for ( key in ARGUMENTS.cookieHeader ) {
@@ -98,15 +98,15 @@ component name="Cookie" hint="Cookie Helper Class" {
 
 			// Setup cookie cutter template
 			cookie = {
-				"name"=       ""
-				,"Domain"=    ""
-				,"Expires"=   "Session"
-				,"Secure"=    false
-				,"HttpOnly"=  false
-				,"Max-Age"=   ""
-				,"Path"=      ""
-				,"Version"=   ""
-				,"value"=     ""
+				"name"       = ""
+				,"Domain"    = ""
+				,"Expires"   = "Session"
+				,"Secure"    = false
+				,"HttpOnly"  = false
+				,"Max-Age"   = ""
+				,"Path"      = ""
+				,"Version"   = ""
+				,"value"     = ""
 			};
 
 			// Loop over data in cookie
